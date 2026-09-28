@@ -4,13 +4,11 @@
 
 
 from pathlib import Path
-import os
 from tkinter import filedialog
-
 from lang import detect_language
 
 
-# В эту функцию подаются готовый список расширений
+# В эту функцию подаются путь к папке и готовый список расширений
 def get_file_list(dir_path, file_extensions_list):
     res = []
     for e in file_extensions_list:

@@ -6,9 +6,7 @@
 
 import customtkinter as ctk
 from tkinter import messagebox as msgbx
-
-from pyparsing import replaceWith
-
+import os
 import core
 
 
@@ -16,9 +14,24 @@ class AppUI:
 
     def __init__(self):
         self.root = ctk.CTk()
-        self.root.geometry("800x400")  # Немного увеличили окно для вместительности
+        self.root.geometry("800x400")
         self.root.title("Подсчет строк кода")
         self.root.resizable(False, False)
+
+        # Путь до темы и установка
+        theme_path = os.path.dirname(os.path.abspath(__file__))
+        theme_path = os.path.join(theme_path, "data")
+        theme_itself = "breeze.json"
+        theme_path = os.path.join(theme_path, theme_itself)
+        ctk.set_appearance_mode("System")
+        ctk.set_default_color_theme(theme_path)
+
+        # Путь до иконки и установка
+        icon_path = os.path.dirname(os.path.abspath(__file__))
+        icon_path = os.path.join(icon_path, "data")
+        icon_itself = "clocicon.ico"
+        icon_path = os.path.join(icon_path, icon_itself)
+        self.root.iconbitmap(icon_path)
 
         self.current_path = ""
         self.files = []
@@ -60,7 +73,6 @@ class AppUI:
         analyze_button = ctk.CTkButton(master=self.root,
                                        text="Анализировать",
                                        font=("Segoe UI", 14, "bold"),
-                                       fg_color="#1f538d",
                                        command=self.if_pressed_analyze)
         analyze_button.pack(pady=15)
 
@@ -89,7 +101,10 @@ class AppUI:
 
         # Динамически обновляем текст в виджетах
         self.show_lines.configure(text=f"Всего строк кода: {self.how_much_lines}")
-        self.show_langs.configure(text=f"Обнаруженные языки: {self.form_langs}")
+        if (self.how_much_lines == 0):
+            self.show_langs.configure(text="Нет языков (из введеных расширений)")
+        else:
+            self.show_langs.configure(text=f"Обнаруженные языки: {self.form_langs}")
 
     def analyze_given(self):
         # Берем актуальный путь из поля ввода на случай, если его ввели вручную
